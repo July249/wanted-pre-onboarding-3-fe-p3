@@ -1,5 +1,5 @@
 export interface SidebarElement {
-  id: number
+  id: number;
   label: string;
   path: string;
 }

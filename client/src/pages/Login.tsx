@@ -2,13 +2,15 @@ import React from 'react';
 import { getCurrentUserInfo, login } from '../api/login';
 import { useRouter } from '../hooks/useRouter';
 
-// TODO 3-2.: 이미 로그인된 유저인지 판별
-const isLoggedIn = async (): Promise<boolean> => {
-  return false;
-};
-
 const Login = () => {
   const { routeTo } = useRouter();
+
+  // TODO 3-2.: 이미 로그인된 유저인지 판별
+  const isLoggedIn = async (): Promise<boolean> => {
+    const userProfileResponse = await getCurrentUserInfo();
+    return userProfileResponse !== null;
+  };
+
   const loginSubmitHandler = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -17,6 +19,11 @@ const Login = () => {
     const formData = new FormData(event.currentTarget);
 
     // TODO 3-2.: 이미 로그인된 상태라면 page-a로 라우팅
+    const isUserLoggedIn: boolean = await isLoggedIn();
+    if (isUserLoggedIn) {
+      routeTo('/page-a');
+      return;
+    }
 
     const loginResult = await login({
       username: formData.get('username') as string,
@@ -28,8 +35,7 @@ const Login = () => {
       alert('로그인 실패');
       return;
     }
-
-    routeTo('/a');
+    routeTo('/page-a');
   };
 
   return (
